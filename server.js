@@ -25,13 +25,16 @@ app.get('/', function(req, res) {
   res.send(indexData);
 });
 
-console.log(process.env.DOCKER_HOST)
+console.log(`DOCKER_HOST: ${process.env.DOCKER_HOST}`);
 
   if(process.env.DOCKER_HOST) {
      try {
-	   dh = process.env.DOCKER_HOST.split(":");
+       // remove scheme from DOCKER_HOST which is set
+       var cleaned_host = process.env.DOCKER_HOST.replace("tcp://","");
+       dh = cleaned_host.split(":");
 	   var docker_host = dh[0];
 	   var docker_port = dh[1];
+       console.log(`Parsed DOCKER_HOST: using host=${docker_host} and port=${docker_port}`);
      }
 	 catch (err) {
 	   console.log(err.stack)
